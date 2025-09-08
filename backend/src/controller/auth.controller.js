@@ -1,0 +1,9 @@
+export const register_user =  wrapAsync(async (req, res) => {
+    const { name, email, password } = req.body;
+    const user = await register_user(name, email, password);
+    res.status(201).json(user);
+})
+
+export const login_user = wrapAsync(async (req, res) => {
+    res.send("Login")
+})
