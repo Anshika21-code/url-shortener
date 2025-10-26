@@ -1,75 +1,59 @@
-import axios from "axios";
+import axios from "axios"
 
-// Create axios instance with default config
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
-  timeout: 10000, // 10 seconds
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+    baseURL:"http://localhost:3000",
+    timeout:10000, //10s
+    withCredentials:true
+})
 
- 
- 
-
-// Response interceptor for handling errors
+// Response interceptor
 axiosInstance.interceptors.response.use(
-  (response) => {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    return response.data; // Return only the data from the response
-  },
-  (error) => {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    let errorMessage = 'An error occurred';
-    
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      const { status, data } = error.response;
-      
-      switch (status) {
-        case 400:
-          errorMessage = data.message || 'Bad request';
-          break;
-        case 401:
-          errorMessage = 'Unauthorized access';
-          // Redirect to login or refresh token
-          break;
-        case 403:
-          errorMessage = 'Forbidden';
-          break;
-        case 404:
-          errorMessage = 'Requested resource not found';
-          break;
-        case 500:
-          errorMessage = 'Internal server error';
-          break;
-        default:
-          errorMessage = data.message || `Error: ${status}`;
-      }
-    } else if (error.request) {
-      // The request was made but no response was received
-      if (error.code === 'ECONNABORTED') {
-        errorMessage = 'Request timeout. Please try again.';
-      } else {
-        errorMessage = 'No response from server. Please check your connection.';
-      }
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      errorMessage = error.message || 'Network error';
+    (response) => {
+        // Any status code within the range of 2xx
+        return response;
+    },
+    (error) => {
+        // Handle different types of errors
+        if (error.response) {
+            // The server responded with a status code outside the 2xx range
+            const { status, data } = error.response;
+            
+            switch (status) {
+                case 400:
+                    console.error("Bad Request:", data);
+                    break;
+                case 401:
+                    console.error("Unauthorized:", data);
+                    // You could redirect to login page or refresh token here
+                    break;
+                case 403:
+                    console.error("Forbidden:", data);
+                    break;
+                case 404:
+                    console.error("Not Found:", data);
+                    break;
+                case 500:
+                    console.error("Server Error:", data);
+                    break;
+                default:
+                    console.error(`Error (${status}):`, data);
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error("Network Error: No response received", error.request);
+        } else {
+            // Something happened in setting up the request
+            console.error("Error:", error.message);
+        }
+
+        // You can customize the error object before rejecting
+        return Promise.reject({
+            // isAxiosError: true,
+            message: error.response?.data?.message || error.message || "Unknown error occurred",
+            status: error.response?.status,
+            data: error.response?.data,
+            // originalError: error
+        });
     }
-
-    // You can show a toast notification here or handle it in the component
-    console.error('API Error:', errorMessage);
-    
-    // Return a rejected promise with the error message
-    return Promise.reject({
-        message : error.response?.data?.message || errorMessage.message || "Unknown error occurred",
-        status : error.response?.status,
-        data : error.response?.data,
-    })
-  }
 );
-
-export default axiosInstance;
-
+export default axiosInstance
