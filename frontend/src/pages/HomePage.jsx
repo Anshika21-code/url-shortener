@@ -1,16 +1,27 @@
-
-import React from 'react'
-import UrlForm from '../components/UrlForm'
+import React from 'react';
+import HeroSection from '../components/HeroSection';
+import UrlForm from '../components/UrlForm';
+import Footer from '../components/Footer';
 
 const HomePage = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h1 className="text-2xl font-bold text-center mb-6">URL Shortener</h1>
-      <UrlForm/>
-    </div>
-  </div>
-  )
-}
+    <div className="bg-gray-50 min-h-screen flex flex-col">
+      {/* Hero Section */}
+      <HeroSection />
 
-export default HomePage
+      {/* URL Shortener Section */}
+      <div className="flex flex-col items-center justify-center py-2 px-4">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+            Shorten Your Link
+          </h2>
+          <UrlForm />
+           
+        </div>
+      </div>
+      <Footer /> 
+    </div>
+  );
+};
+
+export default HomePage;

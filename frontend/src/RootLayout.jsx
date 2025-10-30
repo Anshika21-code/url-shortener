@@ -9,7 +9,9 @@ const RootLayout = () => {
   return (
     <>
       <Navbar/>
-      <Outlet/>
+      <div> {/* Add padding so content doesn’t hide behind navbar */}
+        <Outlet/>
+      </div>
     </>
   )
 }

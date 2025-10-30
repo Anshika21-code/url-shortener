@@ -21,7 +21,10 @@ const LoginForm = ({ state }) => {
         try {
             const data = await loginUser(password, email);
             dispatch(login(data.user))
-            navigate({to:"/dashboard"})
+            
+            // Redirect to home page where URL customization is shown
+            navigate({to:"/"})
+            
             setLoading(false);
             console.log("signin success")
         } catch (err) {
